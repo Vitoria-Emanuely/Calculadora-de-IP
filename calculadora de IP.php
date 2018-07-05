@@ -1,22 +1,53 @@
 <?php
 
-    $ultimooc = 15;
-    $expoente = (32 - 24); //informado pelo usuario
+    $mascaraBi = 26;//$_POST["mascara"];
+    $ultimoOc = 15; //$_POST["ultimoOcteto];
+    $primeiroOc = 125; //$_POST["primeiroOcteto];
 
-    $qtdEnd = pow(2, $expoente);
+    $expoente = (32 - $mascaraBi); //Máscara binária (/n)
 
-    $subredes = 256 / $qtdEnd;
+    $qtdEnd = pow(2, $expoente); //Quantidade de endereços
+    echo $qtdEnd . "\n";
 
-    $mascaraDec = 256 - $qtdEnd;
+    $subredes = 256 / $qtdEnd; //Quantidade de sub-redes
+    echo $subredes . "\n";
 
-    $qtdHosts = $qtdEnd - 2;
+    $mascaraDec = 256 - $qtdEnd; //Máscara decimal
+    echo $mascaraDec . "\n";
 
-    $redeEncontrada = ($ultimooc / $qtdEnd) + 1 ;
+    $qtdHosts = $qtdEnd - 2; //Quantidade de hosts por sub-rede
+    echo $qtdHosts . "\n";
 
-    $primeiroHost = ($qtdEnd * ($redeEncontrada - 1)) + 1;
+    $IP_subrede = $subredes * (($ultimoOc / $subredes));
+    echo $IP_subrede. "\n";
+
+    $primeiroHost = ($IP_subrede + 1); //Primeiro IP válido
+    echo $primeiroHost . "\n";
+
+    $broadcast = $IP_subrede + ($subredes - 1); //Broadcast da sub-rede
+    echo $broadcast . "\n";
+
+    $ultimoHost = $broadcast - 1; //Último IP válido
+    echo $ultimoHost."\n";
+
+    if ($primeiroOc <= 127){ //Classificação das classes
+    $classeIp = "Classe A";
+    }elseif ($primeiroOc <= 191) {
+        $classeIp = "Classe B";
+    }elseif ($primeiroOc <= 223) {
+        $classeIp = "Classe C";
+    }elseif ($primeiroOc <= 239) {
+        $classeIp = "Classe D";
+    }elseif ($primeiroOc <= 255) {
+        $classeIp = "Classe E";
+    }else{
+        $classeIp = "Informe o valor correto!";
+    }
+    echo $classeIp . "\n";
+
+    
 
 
-    $ultimoHost = ($primeiroHost + $qtdEnd) -3;
 
-echo $ultimoHost."\n";
+
 
