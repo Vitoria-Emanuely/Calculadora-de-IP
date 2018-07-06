@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Calculadora de IPs</title>
-    
+
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script> src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     
     <script>
         $(document).ready(function () {
             $("button").click(function () {
-                $.get("calculadora de IP.php",
+                $.get("calculadora.php",
                     {
                         primeiroOcteto: $("input[name=primeiroOcteto]").val(),
-                        segundoOcteto: ,
-                        terceiroOcteto: ,
-                        ultimoOcteto: ,
-                        mascara:
+                        segundoOcteto: $("input[name=segundoOcteto]").val(),
+                        terceiroOcteto: $("input[name=terceiroOcteto]").val(),
+                        ultimoOcteto: $("input[name=ultimoOcteto]").val(),
+                        mascara: $("input[name=mascara]").val()
                     },
                     function (dados) { //dados chega como um array, pois foi gerado em json
-                        dados['mascaraBin']
+                        dados['mascaraBin', 'qtdEnd', 'subredes', 'mascaraDec', 'qtdHosts', 'rede', 'primeiro', 'ultimo', 'broadcast', 'classe', 'tipo']
                 });
             });
         });
     </script>
+
 </head>
 <body>
 
