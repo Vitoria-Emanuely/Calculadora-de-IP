@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de IPs</title>
+    
+    <script> src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $("button").click(function () {
+                $.get("calculadora de IP.php",
+                    {
+                        primeiroOcteto: $("input[name=primeiroOcteto]").val(),
+                        segundoOcteto: ,
+                        terceiroOcteto: ,
+                        ultimoOcteto: ,
+                        mascara:
+                    },
+                    function (dados) { //dados chega como um array, pois foi gerado em json
+                        dados['mascaraBin']
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <h1>Calculadora de IPs</h1>
+
+    <div class="IP">
+
+        <input type="number" name="primeiroOcteto">
+        <input type="number" name="segundoOcteto">
+        <input type="number" name="terceiroOcteto">
+        <input type="number" name="ultimoOcteto"> /
+        <input type="number" name="mascara">
+
+        <input type="button" name="enviar">
+
+    </div>
+
+</body>
+</html>
