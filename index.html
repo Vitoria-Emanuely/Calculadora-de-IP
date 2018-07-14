@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <title>Calculadora de IPs</title>
 
+    <link rel="shortcut icon" href="favicon.ico" />
+
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script> src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     
     <script>
         $(document).ready(function () {
-            $("button").click(function () {
+            $("#json").hide();
+            $("#enviar").click(function () {
+                $("#json").show();
                 $.get("calculadora.php",
                     {
                         primeiroOcteto: $("input[name=primeiroOcteto]").val(),
@@ -19,27 +24,62 @@
                         mascara: $("input[name=mascara]").val()
                     },
                     function (dados) { //dados chega como um array, pois foi gerado em json
-                        dados['mascaraBin', 'qtdEnd', 'subredes', 'mascaraDec', 'qtdHosts', 'rede', 'primeiro', 'ultimo', 'broadcast', 'classe', 'tipo']
+                       $("#json").html("Informações sobre o IP:" + "<br>" + "<br>" + "Quantidade de endereços: " + dados['qtdEnd'] + "<br>" +
+                           "Quantidade de subredes (redes): " + dados['subredes'] + "<br>" + "Máscara decimal: 255.255.255." + dados['mascaraDec']
+                           + "<br>" + "Quantidade de hosts: " + dados['qtdHosts'] + "<br>" + "Endereço de rede: " + dados['rede'] + "<br>"
+                           + "Primeiro IP válido: " + dados['primeiro'] + "<br>" + "Último IP válido: " + dados['ultimo'] + "<br>"
+                           + "Endereço broadcast: " + dados['broadcast'] + "<br>" + "Classe: " + dados['classe'] + "<br>" + "Endereço: "
+                           + dados['tipo'] + "<br>");
+
+//                        if ($("input[name=primeiroOcteto]").val() >= '255') //TENTEI FAZER PORÉM NÃO FUNCIONA PARA ALGUNS NÚMEROS MENORES QUE 255
+//                            alert("Favor digitar um valor menor que 256!");
+//
+//                        if ($("input[name=segundoOcteto]").val() >= '255')
+//                            alert("Favor digitar um valor menor que 256!");
+//
+//                        if ($("input[name=terceiroOcteto]").val() >= '255')
+//                            alert("Favor digitar um valor menor que 256!");
+//
+//                        if ($("input[name=ultimoOcteto]").val() >= '255')
+//                            alert("Favor digitar um valor menor que 256!");
+//
+//                        if ($("input[name=mascara]").val() >= '32')
+//                            alert("Favor digitar um valor menor que 33 para a máscara!");
                 });
             });
+
         });
     </script>
 
 </head>
 <body>
 
-    <h1>Calculadora de IPs</h1>
+    <div class="titulo">
+        <br> <h1><b>Calculadora de IPs</b></h1>
+    </div>
 
     <div class="IP">
 
-        <input type="number" name="primeiroOcteto">
-        <input type="number" name="segundoOcteto">
-        <input type="number" name="terceiroOcteto">
-        <input type="number" name="ultimoOcteto"> /
-        <input type="number" name="mascara">
+        <h2>Digite o IP desejado e veja a mágica acontecer:</h2>
 
-        <input type="button" name="enviar">
+        <div id="info"><p>Observações:</p>
+        <ul>Inserir nos octetos valores entre 0 à 255</ul>
+        <ul>Inserir na máscaras valores entre 24 à 32</ul>
+        </div>
 
+        <input type="number" name="primeiroOcteto" id="1" placeholder="Ex.: 156"> .
+        <input type="number" name="segundoOcteto" placeholder="Ex.: 201"> .
+        <input type="number" name="terceiroOcteto" placeholder="Ex.: 30"> .
+        <input type="number" name="ultimoOcteto" placeholder="Ex.: 192"> /
+        <input type="number" name="mascara" placeholder="Ex.: 25">
+
+    </div>
+
+    <div id="botao">
+        <button id="enviar">Calcular</button>
+    </div>
+
+    <div id="json">
     </div>
 
 </body>

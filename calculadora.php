@@ -1,15 +1,10 @@
 <?php
 
-//    $mascaraBi = $_GET["mascara"];
-//    $ultimoOc = $_GET["ultimoOcteto"];
-//    $primeiroOc = $_GET["primeiroOcteto"];
-//    $segundoOc = $_GET['sedundoOcteto'];
-//    $terceiroOc = $_GET['terceiroOcteto'];
-$mascBi = 24;
-$ultimoOc = 191;
-$primeiroOc = 162;
-$segundoOc = 10;
-$terceiroOc = 101;
+    $mascaraBi = $_GET["mascara"];
+    $ultimoOc = $_GET["ultimoOcteto"];
+    $primeiroOc = $_GET["primeiroOcteto"];
+    $segundoOc = $_GET["segundoOcteto"];
+    $terceiroOc = $_GET["terceiroOcteto"];
 
     function MascBinaria($mascBi){
         $expoente = (32 - $mascBi);
@@ -17,44 +12,48 @@ $terceiroOc = 101;
         return $expoente;
     }
 
-    function QtdEnd($expoente){   //Quantidade de endereços
+    function QtdEnd($expoente){
         $qtdEnd = pow(2, $expoente);
 
         return $qtdEnd;
     }
 
-    function QtdSubredes($qtdEnd){     //Quantidade de sub-redes
+    function QtdSubredes($qtdEnd){
         $subredes = 256 / $qtdEnd;
 
         return $subredes;
     }
 
-    function MascDecimal($qtdEnd){    //Máscara decimal
+    function MascDecimal($qtdEnd){
         $mascaraDec = 256 - $qtdEnd;
 
         return $mascaraDec;
     }
 
-    function QtdHosts($qtdEnd){   //Quantidade de hosts por sub-rede
-        $qtdHosts = $qtdEnd - 2;
+    function QtdHosts($qtdEnd, $masc){
+        if ($masc == 31 or $masc == 32) {
+            $qtdHosts = $qtdEnd - 1;
+        }else{
+            $qtdHosts = $qtdEnd - 2;
+        }
 
         return $qtdHosts;
     }
 
-    function IPsubrede($subredes, $ultimoOc){
-        $IP_subrede = $subredes * ($ultimoOc / $subredes);
+    function Rede($ultimoOc, $qtdEnd){
+        $rede = floor($ultimoOc / $qtdEnd) * $qtdEnd;
 
-        return $IP_subrede;
+        return $rede;
     }
 
-    function PrimeiroHost($IP_subrede){
-        $primeiroHost = $IP_subrede + 1;
+    function PrimeiroHost($rede){
+        $primeiroHost = $rede + 1;
 
         return $primeiroHost;
     }
 
-    function Broadcast($IP_subrede, $subredes){
-        $broadcast = $IP_subrede + ($subredes - 1);
+    function Broadcast($rede, $qtdEnd){
+        $broadcast = ($rede + $qtdEnd) -1;
 
         return $broadcast;
     }
@@ -66,7 +65,7 @@ $terceiroOc = 101;
     }
 
     function Classes($primeiroOc){
-        if ($primeiroOc <= 127){
+        if ($primeiroOc <= 126){
             $classeIp = "Classe A";
         }elseif ($primeiroOc <= 191) {
             $classeIp = "Classe B";
@@ -83,28 +82,39 @@ $terceiroOc = 101;
         return $classeIp;
     }
 
-    function IPsPrivados(){
+    function IpsPrivados($pOc, $sOc){
+        if ($pOc == 169 and $sOc == 254){
+            $tipo = "Privado (ZeroConf)";
+        }elseif ($pOc == 127){
+            $tipo = "Privado (Localhost)";
+        }elseif ($pOc == 192 and $sOc == 168){
+            $tipo = "Privado";
+        }elseif (($pOc == 172) and ($sOc >= 16) and ($sOc <= 31)){
+            $tipo = "Privado";
+        }elseif ($pOc == 10){
+            $tipo = "Privado";
+        }else{
+            $tipo = "Público";
+        }
 
+        return $tipo;
     }
 
 
-    $mascaraBin = MascBinaria($mascBi);
-    $qtdEnd = QtdEnd($expoente);
+    $mascaraBin = MascBinaria($mascaraBi);
+    $qtdEnd = QtdEnd($mascaraBin);
     $subredes = QtdSubredes($qtdEnd);
     $mascDecimal = MascDecimal($qtdEnd);
-    $qtdHosts = QtdHosts($qtdEnd);
-    $rede = IPsubrede($subredes, $ultimoOc);
-    $primeiro = PrimeiroHost($IP_subrede);
+    $qtdHosts = QtdHosts($qtdEnd, $mascDecimal);
+    $rede = Rede($ultimoOc, $qtdEnd);
+    $primeiro = PrimeiroHost($rede);
+    $broadcast = Broadcast($rede, $qtdEnd);
     $ultimo = UltimoHost($broadcast);
-    $broadcast = Broadcast($IP_subrede, $subredes);
     $classe = Classes($primeiroOc);
-    $privateOrPublic = IPsPrivados();
+    $privateOrPublic = IPsPrivados($primeiroOc, $segundoOc);
 
 
-    //echo "<p>".$mascaraBin."</p>";
-
-$dados = ['mascaraBin' => $mascaraBin,
-          'qtdEnd' => $qtdEnd,
+$dados = ['qtdEnd' => $qtdEnd,
           'subredes' => $subredes,
           'mascaraDec' => $mascDecimal,
           'qtdHosts' => $qtdHosts,
@@ -113,17 +123,7 @@ $dados = ['mascaraBin' => $mascaraBin,
           'ultimo' => $ultimo,
           'broadcast' => $broadcast,
           'classe' => $classe,
-          'tipo' => $privateOrPublic ];
-
+          'tipo' => $privateOrPublic];
 
 header('Content-type: application/json');
 echo json_encode($dados);
-
-
-
-    
-
-
-
-
-
